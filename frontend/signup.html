@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Sign Up</title>
+  <style>
+    body { font-family: Arial, sans-serif; background:#f3f4f6; display:flex; align-items:center; justify-content:center; height:100vh; }
+    .card { background:white; padding:24px; border-radius:8px; box-shadow:0 6px 18px rgba(0,0,0,0.08); width:320px }
+    label{display:block;margin-bottom:6px;font-size:13px}
+    input{width:100%;padding:8px 10px;margin-bottom:12px;border:1px solid #e5e7eb;border-radius:6px}
+    button{width:100%;padding:10px;border-radius:6px;border:none;background:#2563eb;color:white;font-weight:600;cursor:pointer}
+    .muted{font-size:13px;color:#6b7280;margin-top:12px;text-align:center}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h3>Create account</h3>
+    <div>
+      <label for="name">Full name</label>
+      <input id="name" type="text" placeholder="John Doe">
+    </div>
+    <div>
+      <label for="email">Email</label>
+      <input id="email" type="email" placeholder="you@example.com">
+    </div>
+    <div>
+      <label for="password">Password</label>
+      <input id="password" type="password" placeholder="password">
+    </div>
+    <div>
+      <button id="signupBtn" type="button">Sign up</button>
+    </div>
+    <div class="muted">Already have an account? <a href="login.html">Sign in</a></div>
+  </div>
+
+  <script>
+    document.getElementById('signupBtn').addEventListener('click', async () => {
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+
+      if (!name || !email || !password) { alert('All fields are required'); return; }
+
+      try {
+        const res = await fetch('http://localhost:4000/api/auth/signup', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, password })
+        });
+        const data = await res.json();
+        if (!res.ok) { alert(data.message || 'Signup failed'); return; }
+        alert('Signup successful — please login');
+        window.location.href = 'login.html';
+      } catch (err) {
+        console.error(err);
+        alert('Network error');
+      }
+    });
+  </script>
+</body>
+</html>
